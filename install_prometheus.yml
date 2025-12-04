@@ -1,0 +1,40 @@
+---
+- name: Install Prometheus and Node Exporter
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Prometheus and Node Exporter packages
+      apt:
+        name:
+          - prometheus
+          - prometheus-node-exporter
+        state: present
+        update_cache: yes
+
+    - name: Ensure services are started and enabled
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - prometheus
+        - prometheus-node-exporter
+
+    - name: Configure Prometheus to scrape Node Exporter
+      # Appends the config to the end of the file. 
+      # Ensure indentation matches your prometheus.yml structure (usually 2 spaces)
+      blockinfile:
+        path: /etc/prometheus/prometheus.yml
+        marker: "# {mark} ANSIBLE MANAGED NODE EXPORTER CONFIG"
+        block: |
+          
+          - job_name: 'node_exporter'
+            static_configs:
+              - targets: ['localhost:9100']
+      notify: Restart Prometheus
+
+  handlers:
+    - name: Restart Prometheus
+      systemd:
+        name: prometheus
+        state: restarted

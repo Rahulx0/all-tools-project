@@ -1,0 +1,28 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+aws_hosts
+ansible.cfg
+
+# SSH Keys (# filepath: .gitignore
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+aws_hosts
+ansible.cfg
+
+# SSH Keys (
