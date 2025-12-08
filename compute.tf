@@ -58,9 +58,11 @@ resource "null_resource" "grafana_provisioner" {
     command = "ansible -i aws_hosts all -u ubuntu --private-key ${var.private_key_path} -m ping"
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -i aws_hosts grafana.yml"
+    // Add user and private key arguments
+    command = "ansible-playbook -i aws_hosts -u ubuntu --private-key ${var.private_key_path} grafana.yml"
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -i aws_hosts install_prometheus.yml"
-}
+    // Add user and private key arguments
+    command = "ansible-playbook -i aws_hosts -u ubuntu --private-key ${var.private_key_path} install_prometheus.yml"
+  }
 }
