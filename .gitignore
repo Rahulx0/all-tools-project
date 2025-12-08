@@ -21,7 +21,6 @@ ansible.cfg
 
 # Ansible
 *.retry
-aws_hosts
 ansible.cfg
 
 # SSH Keys (
