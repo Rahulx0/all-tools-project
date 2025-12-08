@@ -52,7 +52,13 @@ resource "null_resource" "grafana_provisioner" {
       timeout     = "5m"
     }
     inline = ["echo \"Connection test successful ! Instance is reachable via SSH\""]
-  }
+  } 
+   environment = {
+      LC_ALL   = "en_US.UTF-8"
+      LANG     = "en_US.UTF-8"
+      LANGUAGE = "en_US.UTF-8"
+    }
+
   provisioner "local-exec" {
     command = "ansible -i aws_hosts all -u ubuntu --private-key ${var.private_key_path} -m ping"
   }
