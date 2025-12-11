@@ -2,7 +2,7 @@ pipeline  {
     agent any
     environment {
         TF_IN_AUTOMATION = "true"
-        TF_CLI_CONFIG_FILE=credentials('aws-creds')
+        TF_CLI_CONFIG_FILE=credentials('badf87b5-c81c-440d-87b5-1698b311dcdd')
     }
 
     stages{
