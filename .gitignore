@@ -1,26 +1,49 @@
-# Terraform
-.terraform/
+# ----------------------------------------------------------------------
+# 1. Terraform State and Crash Files (CRITICAL to Ignore)
+# ----------------------------------------------------------------------
+
+# Terraform state files (contain secrets and current infra state)
 *.tfstate
 *.tfstate.backup
-*.tfvars
-*.tfplan
+
+# Local backend locking file
 .terraform.lock.hcl
 
-# Ansible
-*.retry
-ansible.cfg
-
-# SSH Keys (# filepath: .gitignore
-# Terraform
+# Terraform's internal working directory
 .terraform/
-*.tfstate
-*.tfstate.backup
-*.tfvars
-*.tfplan
-.terraform.lock.hcl
 
-# Ansible
-*.retry
-ansible.cfg
+# Crash log files
+crash.log
+# *.tfvars.json (Ignore if you use JSON for variables with secrets)
 
-# SSH Keys (
+
+# ----------------------------------------------------------------------
+# 2. General Tooling and Secrets
+# ----------------------------------------------------------------------
+
+# User SSH Keys (MUST be ignored)
+# If your key is stored inside the project demo directory, uncomment this:
+# id_rsa_project_demo 
+
+# Log files and temporary output
+*.log
+*.out
+
+# ----------------------------------------------------------------------
+# 3. Operating System / IDE Files (Optional but Recommended)
+# ----------------------------------------------------------------------
+
+# Visual Studio Code (VS Code) files
+.vscode/
+
+# Windows/Mac hidden files
+.DS_Store
+Thumbs.db
+
+# ----------------------------------------------------------------------
+# 4. Ansible (if roles/collections are installed locally)
+# ----------------------------------------------------------------------
+
+# Virtual environment files (if used for Python/Ansible dependencies)
+.venv/
+venv/
