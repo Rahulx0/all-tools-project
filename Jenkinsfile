@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('Init') {
+        stage('init') {
             steps {
                 sh 'ls'
                 sh 'terraform init -no-color'
