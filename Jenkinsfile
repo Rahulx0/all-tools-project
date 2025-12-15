@@ -2,6 +2,9 @@ pipeline {
     agent any
 
     environment {
+        LANG = 'en_US.UTF-8'
+        LC_ALL = 'en_US.UTF-8'
+        LANGUAGE = 'en_US.UTF-8'
         TF_IN_AUTOMATION = 'true'
         TF_CLI_ARGS = '-no-color'
         SSH_CRED_ID = 'privatekey' 
