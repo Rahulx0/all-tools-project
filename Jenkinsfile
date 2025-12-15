@@ -4,7 +4,7 @@ pipeline {
     environment {
         TF_IN_AUTOMATION = 'true'
         TF_CLI_ARGS = '-no-color'
-        SSH_CRED_ID = 'aws-deployer-ssh-key' 
+        SSH_CRED_ID = 'privatekey' 
         TF_CLI_CONFIG_FILE = credentials('badf87b5-c81c-440d-87b5-1698b311dcdd')
     }
 
