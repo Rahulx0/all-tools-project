@@ -57,7 +57,7 @@ pipeline {
                 ansiblePlaybook(
                     playbook: 'playbooks/grafana.yml',
                     inventory: 'dynamic_inventory.ini', 
-                    credentialsId: SSH_CRED_ID, // Key is securely injected by the plugin here
+                    credentialsId: 'privatekey', // Key is securely injected by the plugin here
                 )
             }
         }
