@@ -58,7 +58,7 @@ pipeline {
                     playbook: 'playbooks/grafana.yml',
                     inventory: 'dynamic_inventory.ini', 
                     credentialsId: 'privatekey', // Key is securely injected by the plugin here
-                    extras: '-u ubuntu'
+                
                 )
             }
         }
