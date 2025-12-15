@@ -12,7 +12,7 @@ pipeline {
                 sh 'terraform init -no-color'
             }
         }
-        stage('Plan') {
+        stage('plan') {
             steps {
                 sh 'terraform plan -no-color'
             }
