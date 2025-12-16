@@ -79,7 +79,7 @@ pipeline {
         }
         stage('Ansible Configuration') {
             steps {
-                // Now you can proceed directly to Ansible, knowing SSH is almost certainly ready.
+                // Now you can ed directly to Ansible, knowing SSH is almost certainly ready.
                 ansiblePlaybook(
                     playbook: 'playbooks/grafana.yml',
                     inventory: 'dynamic_inventory.ini', 
