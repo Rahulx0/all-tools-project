@@ -13,7 +13,7 @@ variable "access_ip" {
 variable "instance_type" {
   description = "The type of instance to use for the web server"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "main_instance_count" {
