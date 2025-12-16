@@ -48,4 +48,4 @@ Thumbs.db
 .venv/
 venv/
 
-.aws.sh
+aws.sh
