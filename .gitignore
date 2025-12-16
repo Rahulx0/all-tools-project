@@ -47,3 +47,5 @@ Thumbs.db
 # Virtual environment files (if used for Python/Ansible dependencies)
 .venv/
 venv/
+
+.aws.sh
