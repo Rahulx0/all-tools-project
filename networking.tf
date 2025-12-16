@@ -8,7 +8,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "devops-automation-project-rahul"
+    bucket       = "devops-automation-project-kratos"
     key          = "terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
