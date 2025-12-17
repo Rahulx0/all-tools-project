@@ -14,15 +14,17 @@ pipeline {
     stages {
         stage('Terraform Initialization') {
             steps {
-                sh 'terraform init --reconfigure'
+                sh 'terraform init'
+                sh 'cat $BRANCH_NAME.tfvars'
             }
         }
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                sh 'terraform plan -var-file=$BRANCH_NAME.tfvars'
             }
         }
         stage('Validate Apply') {
+            
             input {
                 message "Do you want to apply this plan?"
                 ok "Apply"
@@ -34,7 +36,7 @@ pipeline {
         stage('Terraform Provisioning') {
             steps {
                 script {
-                    sh 'terraform apply -auto-approve'
+                    sh 'terraform apply -auto-approve -var-file=$BRANCH_NAME.tfvars'
 
                     // 1. Extract Public IP Address of the provisioned instance
                     env.INSTANCE_IP = sh(
@@ -63,12 +65,13 @@ pipeline {
                 
                 // --- This is the simple, powerful AWS CLI command ---
                 // It polls AWS until status checks pass or it hits the default timeout (usually 15 minutes)
-                sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID} --region us-east-1"  
+                sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID} --region us-east-2"  
                 
                 echo 'AWS instance health checks passed. Proceeding to Ansible.'
             }
         }
         stage('Validate Ansible') {
+            
             input {
                 message "Do you want to run Ansible?"
                 ok "Run Ansible"
@@ -79,6 +82,7 @@ pipeline {
         }
         stage('Ansible Configuration') {
             steps {
+                // Now you can proceed directly to Ansible, knowing SSH is almost certainly ready.
                 ansiblePlaybook(
                     playbook: 'playbooks/grafana.yml',
                     inventory: 'dynamic_inventory.ini', 
@@ -97,7 +101,7 @@ pipeline {
         }
         stage('Destroy') {
             steps {
-                sh 'terraform destroy -auto-approve'
+                sh 'terraform destroy -auto-approve -var-file=$BRANCH_NAME.tfvars'
             }
         }
     }    
@@ -109,7 +113,7 @@ pipeline {
             echo 'Success!'
         }
         failure {
-            sh 'terraform destroy -auto-approve'
+            sh 'terraform destroy -auto-approve -var-file=$BRANCH_NAME.tfvars || echo "Cleanup failed, please check manually."'
         }
     }
 }
