@@ -15,12 +15,12 @@ pipeline {
         stage('Terraform Initialization') {
             steps {
                 sh 'terraform init'
-                sh 'cat $BRANCH_NAME.tfvars'
+                sh 'cat dev.tfvars'
             }
         }
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -var-file=$BRANCH_NAME.tfvars'
+                sh 'terraform plan -var-file=dev.tfvars'
             }
         }
         stage('Validate Apply') {
@@ -36,7 +36,7 @@ pipeline {
         stage('Terraform Provisioning') {
             steps {
                 script {
-                    sh 'terraform apply -auto-approve -var-file=$BRANCH_NAME.tfvars'
+                    sh 'terraform apply -auto-approve -var-file=dev.tfvars'
 
                     // 1. Extract Public IP Address of the provisioned instance
                     env.INSTANCE_IP = sh(
@@ -65,7 +65,7 @@ pipeline {
                 
                 // --- This is the simple, powerful AWS CLI command ---
                 // It polls AWS until status checks pass or it hits the default timeout (usually 15 minutes)
-                sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID} --region us-east-2"  
+                sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID} --region us-east-1"  
                 
                 echo 'AWS instance health checks passed. Proceeding to Ansible.'
             }
@@ -101,7 +101,7 @@ pipeline {
         }
         stage('Destroy') {
             steps {
-                sh 'terraform destroy -auto-approve -var-file=$BRANCH_NAME.tfvars'
+                sh 'terraform destroy -auto-approve -var-file=dev.tfvars'
             }
         }
     }    
@@ -113,7 +113,7 @@ pipeline {
             echo 'Success!'
         }
         failure {
-            sh 'terraform destroy -auto-approve -var-file=$BRANCH_NAME.tfvars || echo "Cleanup failed,please check manually."'
+            sh 'terraform destroy -auto-approve -var-file=dev.tfvars || echo "Cleanup failed,please check manually."'
         }
     }
 }
