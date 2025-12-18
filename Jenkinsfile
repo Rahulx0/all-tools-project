@@ -24,7 +24,9 @@ pipeline {
             }
         }
         stage('Validate Apply') {
-            
+            when {
+                branch 'dev'
+            }
             input {
                 message "Do you want to apply this plan?"
                 ok "Apply"
@@ -68,16 +70,6 @@ pipeline {
                 sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID} --region us-east-1"  
                 
                 echo 'AWS instance health checks passed. Proceeding to Ansible.'
-            }
-        }
-        stage('Validate Ansible') {
-            
-            input {
-                message "Do you want to run Ansible?"
-                ok "Run Ansible"
-            }
-            steps {
-                echo 'Ansible approved'
             }
         }
         stage('Ansible Configuration') {
