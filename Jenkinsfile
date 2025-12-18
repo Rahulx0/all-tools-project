@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        BRANCH_NAME = 'main'
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
         LANGUAGE = 'en_US.UTF-8'
