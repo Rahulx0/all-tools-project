@@ -18,21 +18,21 @@ pipeline {
                 sh "cat ${env.BRANCH_NAME}.tfvars"
             }
         }
-        stage('Terraform Plan') {
-            steps {
-                sh script: "terraform plan -var-file=${env.BRANCH_NAME}.tfvars"
-            }
-        }
-        stage('Validate Apply') {
+        stage('Validate Plan') {
             when {
                 branch 'dev'
             }
             input {
-                message "Do you want to apply this plan?"
-                ok "Apply"
+                message "Do you want to run the plan?"
+                ok "Plan"
             }
             steps {
-                echo 'Apply Accepted'
+                echo 'Plan Approved'
+            }
+        }
+        stage('Terraform Plan') {
+            steps {
+                sh script: "terraform plan -var-file=${env.BRANCH_NAME}.tfvars"
             }
         }
         stage('Terraform Provisioning') {
