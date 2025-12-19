@@ -1,7 +1,7 @@
 # playbooks/grafana.yml
 - name: Install and Configure Grafana
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Install dependencies for repository setup
       ansible.builtin.apt:
