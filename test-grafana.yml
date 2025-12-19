@@ -2,7 +2,7 @@
 hosts: all
 gather_facts: no
 tasks:
-  - name: Wait for Grafana to be accessible
+  - name: Wait for Grafana to be accessible on port 3000
     ansible.builtin.uri:
       url: http://{{inventory_hostname}}:3000
       follow_redirects: none
