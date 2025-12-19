@@ -12,27 +12,28 @@ pipeline {
     }
 
     stages {
-        stage('Terraform Initialization ') {
+        stage('Terraform Initialization') {
             steps {
                 sh 'terraform init'
                 sh "cat ${env.BRANCH_NAME}.tfvars"
             }
         }
-        stage('Validate Plan') {
-            when {
-                branch 'dev'
-            }
-            input {
-                message "Do you want to run the plan?"
-                ok "Plan"
-            }
-            steps {
-                echo 'Plan Approved'
-            }
-        }
         stage('Terraform Plan') {
             steps {
                 sh script: "terraform plan -var-file=${env.BRANCH_NAME}.tfvars"
+            }
+        }
+        stage('Validate Apply') {
+            when {
+                beforeInput true
+                branch 'dev'
+            }
+            input {
+                message "Do you want to apply this plan?"
+                ok "Apply"
+            }
+            steps {
+                echo 'Apply Accepted'
             }
         }
         stage('Terraform Provisioning') {
@@ -72,11 +73,29 @@ pipeline {
                 echo 'AWS instance health checks passed. Proceeding to Ansible.'
             }
         }
-        stage('Ansible Configuration') {
+        stage('Validate Ansible') {
+            when {
+                beforeInput true
+                branch 'dev'
+            }
+            input {
+                message "Do you want to run Ansible?"
+                ok "Run Ansible"
+            }
+            steps {
+                echo 'Ansible approved'
+            }
+        }
+        stage('Ansible Configuration and Testing') {
             steps {
                 // Now you can proceed directly to Ansible, knowing SSH is almost certainly ready.
                 ansiblePlaybook(
                     playbook: 'playbooks/grafana.yml',
+                    inventory: 'dynamic_inventory.ini', 
+                    credentialsId: SSH_CRED_ID, // Key is securely injected by the plugin here
+                )
+                ansiblePlaybook(
+                    playbook: 'playbooks/test-grafana.yml',
                     inventory: 'dynamic_inventory.ini', 
                     credentialsId: SSH_CRED_ID, // Key is securely injected by the plugin here
                 )
@@ -104,8 +123,11 @@ pipeline {
         success {
             echo 'Success!'
         }
-        failure {
-            sh "terraform destroy -auto-approve -var-file=${env.BRANCH_NAME}.tfvars || echo \"Cleanup failed,please check manually.\""
+        // failure {
+        //     sh "terraform destroy -auto-approve -var-file=${env.BRANCH_NAME}.tfvars || echo \"Cleanup failed, please check manually.\""
+        // }
+        aborted {
+            sh "terraform destroy -auto-approve -var-file=${env.BRANCH_NAME}.tfvars || echo \"Cleanup failed, please check manually.\""
         }
     }
 }
